@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<!-- service_robot.urdf.xacro — AMR final project Phase 3
+     Mirror of amr_robot_description/models/service_robot/model.sdf.
+     Used ONLY by robot_state_publisher to emit TF for the robot.
+     The actual physics/dynamics are in the SDF; this file is
+     geometry + frame tree only. -->
+<robot name="service_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ========== PROPERTIES (keep in sync with SDF) ========== -->
+  <xacro:property name="chassis_length" value="0.6"/>
+  <xacro:property name="chassis_width"  value="0.4"/>
+  <xacro:property name="chassis_height" value="0.3"/>
+
+  <xacro:property name="wheel_radius"    value="0.1"/>
+  <xacro:property name="wheel_length"    value="0.05"/>
+  <xacro:property name="wheel_x_offset"  value="-0.05"/>
+  <xacro:property name="wheel_y_offset"  value="0.23"/>
+  <xacro:property name="wheel_z_offset"  value="-0.15"/>
+
+  <xacro:property name="caster_radius"   value="0.05"/>
+  <xacro:property name="caster_xyz"      value="0.25 0 -0.20"/>
+
+  <xacro:property name="lidar_xyz"       value="0 0 0.2"/>
+  <xacro:property name="camera_xyz"      value="0.3 0 0.05"/>
+  <xacro:property name="imu_xyz"         value="0 0 0"/>
+
+  <!-- ========== BASE LINK (chassis) ========== -->
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+      </geometry>
+      <material name="chassis_blue">
+        <color rgba="0.2 0.4 0.8 1.0"/>
+      </material>
+    </visual>
+  </link>
+
+  <!-- ========== LEFT WHEEL ========== -->
+  <link name="left_wheel_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+      </geometry>
+      <material name="wheel_black">
+        <color rgba="0.1 0.1 0.1 1.0"/>
+      </material>
+    </visual>
+  </link>
+
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child  link="left_wheel_link"/>
+    <origin xyz="${wheel_x_offset} ${wheel_y_offset} ${wheel_z_offset}"
+            rpy="-1.5707963 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <!-- ========== RIGHT WHEEL ========== -->
+  <link name="right_wheel_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+      </geometry>
+      <material name="wheel_black"/>
+    </visual>
+  </link>
+
+  <joint name="right_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child  link="right_wheel_link"/>
+    <origin xyz="${wheel_x_offset} ${-wheel_y_offset} ${wheel_z_offset}"
+            rpy="-1.5707963 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <!-- ========== CASTER (fixed joint: URDF has no ball joint) ========== -->
+  <link name="caster_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="${caster_radius}"/>
+      </geometry>
+      <material name="caster_grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+  </link>
+
+  <joint name="caster_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="caster_link"/>
+    <origin xyz="${caster_xyz}" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ========== LIDAR (fixed) ========== -->
+  <link name="lidar_link"/>
+  <joint name="lidar_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="lidar_link"/>
+    <origin xyz="${lidar_xyz}" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ========== CAMERA (fixed) ========== -->
+  <link name="camera_link"/>
+  <joint name="camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="camera_link"/>
+    <origin xyz="${camera_xyz}" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ========== IMU (fixed) ========== -->
+  <link name="imu_link"/>
+  <joint name="imu_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="imu_link"/>
+    <origin xyz="${imu_xyz}" rpy="0 0 0"/>
+  </joint>
+
+</robot>
