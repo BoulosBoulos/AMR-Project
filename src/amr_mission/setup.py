@@ -24,6 +24,8 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'mission_gui = amr_mission.mission_gui_node:main',
+            'mission_planner = amr_mission.mission_planner_node:main',
         ],
     },
 )
